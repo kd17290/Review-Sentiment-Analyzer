@@ -44,3 +44,5 @@ RUN poetry run python -c "from transformers import pipeline; \
 
 # Copy remaining source code.
 COPY . .
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD curl -f http://0.0.0.0:8001/health || exit 1
