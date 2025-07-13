@@ -1,0 +1,16 @@
+# LICENSE HEADER
+
+services:
+  app:
+    image: '${DOCKER_IMAGE_NAME:-app-ms}:${DOCKER_IMAGE_TAG:-latest}'
+    tty: true
+    container_name: app-ms
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "poetry run uvicorn app.main:app --host 0.0.0.0 --port 8001 --log-level info --reload"
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8001:8001
+    restart: always

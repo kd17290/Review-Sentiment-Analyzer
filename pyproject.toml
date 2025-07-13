@@ -1,0 +1,26 @@
+# LICENSE HEADER
+
+[tool.poetry]
+name = "app"
+version = "1.0"
+description = "App"
+authors = ["Kuldeep K"]
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.104.1"
+python-dotenv = "^1.0.0"
+uvicorn = "^0.24.0"
+pytest = "^7.3.2"
+httpx = "^0.25.2"
+transformers = "^4.53.2"
+langdetect = "^1.0.9"
+torch = "^2.7.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "24.3.0"
+pre-commit = "^3.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
