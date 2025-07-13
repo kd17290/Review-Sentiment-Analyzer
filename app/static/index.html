@@ -46,6 +46,25 @@
             });
             const result = await response.json();
             document.getElementById('result').innerText = 'Sentiment: ' + result.sentiment + ', Confidence: ' + result.confidence + ', Language: ' + result.language;
+
+            // Send feedback to /feedback API
+            const corrected = prompt('Select the correct sentiment:\n1. Positive\n2. Negative\n3. Neutral', 'Positive');
+            if (corrected) {
+                await fetch('/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: inputData,
+                        pipeline: pipeline,
+                        sentiment: result.sentiment,
+                        confidence: result.confidence,
+                        language: result.language,
+                        corrected: corrected
+                    })
+                });
+            }
         });
     </script>
 </body>
