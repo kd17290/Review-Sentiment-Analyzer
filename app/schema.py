@@ -12,3 +12,12 @@ class PredictionOut(BaseModel):
     sentiment: str
     confidence: float
     language: str | None
+
+
+class FeedbackRequest(BaseModel):
+    text: str
+    pipeline: PipelineType
+    sentiment: str
+    confidence: float
+    language: str | None
+    corrected: str

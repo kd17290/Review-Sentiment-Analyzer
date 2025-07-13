@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime
 
 from fastapi import APIRouter
@@ -5,6 +6,7 @@ from langdetect import detect
 from langdetect import LangDetectException
 
 from app.pipelines.factory import PipelineFactory
+from app.schema import FeedbackRequest
 from app.schema import PredictionOut
 from app.schema import TextIn
 
@@ -30,3 +32,22 @@ def predict(payload: TextIn):
         "confidence": prediction.confidence,
         "language": language,
     }
+
+
+@router.post("/feedback")
+def submit_feedback(data: FeedbackRequest):
+    feedback = {
+        "text": data.text,
+        "pipeline": data.pipeline,
+        "sentiment": data.sentiment,
+        "confidence": data.confidence,
+        "language": data.language,
+        "corrected": data.corrected,
+        "timestamp": datetime.now().isoformat(),
+    }
+    with open("feedback.csv", "a", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=feedback.keys())
+        if f.tell() == 0:
+            writer.writeheader()
+        writer.writerow(feedback)
+    return {"status": "stored"}
