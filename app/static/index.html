@@ -23,7 +23,7 @@
             try {
                 const response = await fetch('/health');
                 const data = await response.json();
-                document.getElementById('health-status').innerText = 'Health: ' + data.status + data.timestamp;
+                document.getElementById('health-status').innerText = 'Health: ' + data.status + ' at ' + data.timestamp;
             } catch (error) {
                 document.getElementById('health-status').innerText = 'Health: Unreachable';
             }
