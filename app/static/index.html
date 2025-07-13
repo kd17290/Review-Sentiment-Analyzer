@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction App</title>
+</head>
+<body>
+    <h1>Prediction App</h1>
+    <div id="health-status"></div>
+    <form id="predict-form">
+        <label for="input-data">Input Data:</label>
+        <input type="text" id="input-data" name="input-data" required>
+        <label for="pipeline">Pipeline:</label>
+        <select id="pipeline" name="pipeline" required>
+            <option value="base_multilingual_uncased_sentiment">Multilingual</option>
+            <option value="distilbert_base_uncased_finetuned_sst2_english">Distilbert</option>
+        </select>
+        <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        async function checkHealth() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                document.getElementById('health-status').innerText = 'Health: ' + data.status + ' at ' + data.timestamp;
+            } catch (error) {
+                document.getElementById('health-status').innerText = 'Health: Unreachable';
+            }
+        }
+
+        // Initial health check and set interval
+        checkHealth();
+        setInterval(checkHealth, 10000);
+
+        document.getElementById('predict-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const inputData = document.getElementById('input-data').value;
+            const pipeline = document.getElementById('pipeline').value;
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputData, pipeline: pipeline })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = 'Sentiment: ' + result.sentiment + ', Confidence: ' + result.confidence + ', Language: ' + result.language;
+        });
+    </script>
+</body>
+</html>
