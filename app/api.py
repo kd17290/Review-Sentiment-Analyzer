@@ -1,6 +1,6 @@
-import csv
 from datetime import datetime
 
+import pandas as pd
 from fastapi import APIRouter
 from langdetect import detect
 from langdetect import LangDetectException
@@ -45,9 +45,15 @@ def submit_feedback(data: FeedbackRequest):
         "corrected": data.corrected,
         "timestamp": datetime.now().isoformat(),
     }
-    with open("feedback.csv", "a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=feedback.keys())
-        if f.tell() == 0:
-            writer.writeheader()
-        writer.writerow(feedback)
+    df = pd.DataFrame([feedback])
+    file_path = "feedback.csv"
+    try:
+        df.to_csv(
+            file_path,
+            mode="a",
+            header=not pd.io.common.file_exists(file_path),
+            index=False,
+        )
+    except Exception:
+        df.to_csv(file_path, mode="w", header=True, index=False)
     return {"status": "stored"}
